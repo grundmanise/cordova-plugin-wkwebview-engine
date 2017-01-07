@@ -171,13 +171,14 @@ static void * KVOContext = &KVOContext;
 - (BOOL)shouldReloadWebView:(NSURL*)location title:(NSString*)title
 {
     BOOL title_is_nil = (title == nil);
+    BOOL title_is_empty = ([title length] == 0);
     BOOL location_is_blank = [[location absoluteString] isEqualToString:@"about:blank"];
     
-    BOOL reload = (title_is_nil || location_is_blank);
+    BOOL reload = (title_is_nil || title_is_empty || location_is_blank);
     
 #ifdef DEBUG
     NSLog(@"%@", @"CDVWKWebViewEngine shouldReloadWebView::");
-    NSLog(@"CDVWKWebViewEngine shouldReloadWebView title: %@", title);
+    NSLog(@"CDVWKWebViewEngine shouldReloadWebView title: %@ , title_is_nil: %d, title_is_empty: %d", title, title_is_nil, title_is_empty);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView location: %@", [location absoluteString]);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView reload: %u", reload);
 #endif
