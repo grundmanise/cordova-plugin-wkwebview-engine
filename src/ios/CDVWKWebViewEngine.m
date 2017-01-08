@@ -156,10 +156,16 @@ static void * KVOContext = &KVOContext;
 }
 
 - (void) onAppWillEnterForeground:(NSNotification*)notification {
-    if ([self shouldReloadWebView]) {
-        NSLog(@"%@", @"CDVWKWebViewEngine reloading!");
-        [(WKWebView*)_engineWebView reload];
-    }
+ 
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC));
+    
+    dispatch_after(delay, dispatch_get_main_queue(), ^{
+        if ([self shouldReloadWebView]) {
+            NSLog(@"%@", @"CDVWKWebViewEngine reloading!");
+            [(WKWebView*)_engineWebView reload];
+        }
+    });
+ 
 }
 
 - (BOOL)shouldReloadWebView
@@ -176,12 +182,10 @@ static void * KVOContext = &KVOContext;
     
     BOOL reload = (title_is_nil || title_is_empty || location_is_blank);
     
-#ifdef DEBUG
     NSLog(@"%@", @"CDVWKWebViewEngine shouldReloadWebView::");
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView title: %@ , title_is_nil: %d, title_is_empty: %d", title, title_is_nil, title_is_empty);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView location: %@", [location absoluteString]);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView reload: %u", reload);
-#endif
     
     return reload;
 }
