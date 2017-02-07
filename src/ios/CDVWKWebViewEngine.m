@@ -23,6 +23,8 @@
 
 #import <objc/message.h>
 
+#import "EGAnimatedFullScreenImage.h"
+
 #define CDV_BRIDGE_NAME @"cordova"
 #define CDV_WKWEBVIEW_FILE_URL_LOAD_SELECTOR @"loadFileURL:allowingReadAccessToURL:"
 
@@ -156,15 +158,15 @@ static void * KVOContext = &KVOContext;
 }
 
 - (void) onAppWillEnterForeground:(NSNotification*)notification {
- 
-    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC));
-    
-    dispatch_after(delay, dispatch_get_main_queue(), ^{
+     
         if ([self shouldReloadWebView]) {
+         
             NSLog(@"%@", @"CDVWKWebViewEngine reloading!");
             [(WKWebView*)_engineWebView reload];
+            EGAnimatedFullScreenImage *splashScreen = [[EGAnimatedFullScreenImage alloc] init];
+            [splashScreen show:@"animatedSplashScreen/splashAnim"];
+         
         }
-    });
  
 }
 
